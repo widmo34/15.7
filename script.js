@@ -1,14 +1,14 @@
 class Stopwatch extends React.Component {
    
     constructor(props){
-        super(props);
+        super();
         this.state = {
             times : {
-                miliseconds: '',
-                seconds: '',
-                minutes: '',
+                miliseconds: 0,
+                seconds: 0,
+                minutes: 0,
             },
-            running: 'false',
+            running: false,
         }
             
            
@@ -20,19 +20,21 @@ class Stopwatch extends React.Component {
 
     reset(){
         this.setState({
-            times: null
+            times : {
+                miliseconds: '',
+                seconds: '',
+                minutes: '',
+            }
        });
      
     }
 
-    print(){
-        document.querySelector('stopwatch').innerText = this.format(this.state.times)
-    }
+   
 
-    format(value){
-        const self = this;
-
-        return `${self.pad0(value.minutes)}:${self.pad0(value.seconds)}:${self.pad0(Math.floor(value.miliseconds))}`
+    format(){
+      //  const self = this;
+        let {times: { minutes: mm, seconds: ss, miliseconds: ms}} = this.state;
+        return `${this.pad0(mm)}:${this.pad0(ss)}:${this.pad0(Math.floor(ms))}`
     }
 
     start(){
@@ -45,22 +47,32 @@ class Stopwatch extends React.Component {
     }
 
     step(){
-        if(!this.running) return;
+        if(!this.state.running) return;
         this.calculate();
-        this.print();   
+       
     }
 
     calculate(){
-        this.setState(this.state.times.miliseconds += 1);
-        if(this.setState(this.state.times.miliseconds >= 100)){
-            this.setState(this.state.times.seconds += 1);
-            this.setState(this.state.times.miliseconds = 0);
+        let {times: { minutes: mm, seconds: ss, miliseconds: ms}} = this.state;
+       
+       
+        ms += 1;
+        if(ms >= 100){
+            ss += 1;
+            ms = 0;
         }
 
-        if(this.state.times.seconds >= 60){
-            this.setState(this.state.times.minutes += 1);
-            this.setState(this.state.times.seconds = 0);
-        }
+        if(ss >= 60){
+            mm += 1;
+            ss = 0;
+}
+        this.setState({
+            times : {
+                minutes: mm,
+                seconds: ss,
+                miliseconds: ms
+            }
+        })
     }
 
 
@@ -84,10 +96,10 @@ class Stopwatch extends React.Component {
             <div>
                
             <nav className="controls">
-            <a href="#" className="button" id="start" onClick={this.start}>Start</a>
-            <a href="#" className="button" id="stop" onClick={this.stop}>Stop</a>
+            <a href="#" className="button" id="start" onClick={this.start.bind(this)}>Start</a>
+            <a href="#" className="button" id="stop" onClick={this.stop.bind(this)}>Stop</a>
             </nav>
-            <div className="stopwatch"></div>
+            <div className="stopwatch">{this.format()}</div>
             <ul className="results"></ul>    
             </div> 
            
