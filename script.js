@@ -21,9 +21,9 @@ class Stopwatch extends React.Component {
     reset(){
         this.setState({
             times : {
-                miliseconds: '',
-                seconds: '',
-                minutes: '',
+                miliseconds: 0,
+                seconds: 0,
+                minutes: 0,
             }
        });
      
